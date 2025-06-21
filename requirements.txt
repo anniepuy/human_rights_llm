@@ -1,0 +1,29 @@
+# Core LLM + RAG
+langchain>=0.2.0
+langchain-community>=0.2.0
+langchain-core>=0.2.0
+langchainhub
+chromadb
+pydantic>=2.0
+tiktoken
+
+# LLM/Embeddings
+ollama
+nomic
+
+# File Parsing
+pymupdf  # for PDF (fitz)
+pandas   # for CSVs
+
+# Local Storage + Logging
+sqlite-utils
+sqlalchemy
+tinydb  # optional lightweight storage
+loguru  # better logging
+
+# Frontend
+streamlit
+plotly
+
+# Utilities
+python-dotenv

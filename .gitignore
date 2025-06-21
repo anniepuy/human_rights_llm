@@ -1,0 +1,52 @@
+# Bytecode and Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+.venv/
+env/
+venv/
+
+# IDEs and tools
+.vscode/
+.idea/
+*.swp
+
+# Streamlit & frontend artifacts
+frontend/.streamlit/config.toml
+frontend/.streamlit/secrets.toml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs and reports
+logs/
+*.log
+
+# SQLite databases
+*.db
+*.sqlite3
+
+# Chroma vector DB
+embeddings/chroma/
+
+# Uploaded or generated files
+data/uploads/
+data/dhs_reports/
+
+# Test and debug
+test_log.log
+coverage/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Kaggle cache (if any)
+~/.kaggle/
+
+# Exported data or output
+*.csv
+*.pdf
+*.docx
