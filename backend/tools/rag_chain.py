@@ -10,7 +10,7 @@ import time
 from langchain_core.runnables import RunnableMap, RunnablePassthrough, RunnableLambda
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.chat_models import ChatOllama
-from retriever import retrieve_documents
+from backend.tools.retriever import retrieve_documents
 from langchain_core.output_parsers import StrOutputParser
 
 ## Instantiate the LLM
