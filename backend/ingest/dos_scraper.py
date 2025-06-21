@@ -3,7 +3,7 @@ Application: Human Rights LLM
 Author: Ann Hagan - ann.marie783@gmail.com
 Date: 06-05-2025
 File: dos_scraper.py
-Description: This file is used to scrape the Dept of State's Human Rights Reports.
+Description: This file is used to scrape the Dept of State's Human Rights Reports on the top 20 aslyum seeking countries.
 """
 import os
 import requests
@@ -27,6 +27,29 @@ BASE_URL = "https://www.state.gov/"
 INDEX_URL = "https://www.state.gov/reports/2023-country-reports-on-human-rights-practices/"
 PDF_DIR = "data/pdf/dos"
 
+#Countries whose reports we want to scrape
+TARGET_COUNTRIES = [
+    "afghanistan",
+    "venezuela",
+    "el-salvador",
+    "honduras",
+    "iran",
+    "iraq",
+    "guatemala",
+    "syria",
+    "somalia",
+    "eritrea",
+    "yemen",
+    "cuba",
+    "nicaragua",
+    "democratic-republic-of-the-congo",
+    "sudan",
+    "south-sudan",
+    "burundi",
+    "pakistan",
+    "bangladesh",
+    "ethiopia"
+]
 #Ouput directory
 os.makedirs(PDF_DIR, exist_ok=True)
 
@@ -48,9 +71,11 @@ def scrap_dos_reports(url=INDEX_URL):
 
     for a in soup.find_all("a", href=True):
         href = a["href"]
-        if "2023-country-reports-on-human-rights-practices" in href and href.endswith(".pdf"):
-            full_url = urljoin(INDEX_URL, href)
-            pdf_links.append(full_url)
+        href_lower = href.lower()
+        if "2023-country-reports-on-human-rights-practices" in href_lower and href.endswith(".pdf"):
+            if any(country in href_lower for country in TARGET_COUNTRIES):
+                full_url = urljoin(BASE_URL, href)
+                pdf_links.append(full_url)
     
     logger.info(f"Found {len(pdf_links)} PDF links")
 
