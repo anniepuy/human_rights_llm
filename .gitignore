@@ -50,3 +50,6 @@ coverage/
 *.csv
 *.pdf
 *.docx
+
+# Kaggle API key
+kaggle/kaggle.json

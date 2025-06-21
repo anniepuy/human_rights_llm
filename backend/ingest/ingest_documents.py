@@ -18,6 +18,16 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import OllamaEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain_core.documents import Document
+from pathlib import Path
+import shutil
+
+# Path definitions - use backend structure
+BACKEND_ROOT = Path(__file__).parent.parent
+DATA_DIR = BACKEND_ROOT / "data"
+CSV_DIR = DATA_DIR / "csv"
+PDF_DIR = DATA_DIR / "pdf" / "dos"
+DB_PATH = BACKEND_ROOT / "db" / "documents.db"
+CHROMA_DB_PATH = BACKEND_ROOT / "embeddings" / "chroma_db"
 
 #logging
 logging.basicConfig(
@@ -27,15 +37,9 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-#Paths
-CSV_PATH = "data/csv/human_rights.csv"
-PDF_DIR = "data/pdf"
-DB_PATH = "backend/db/documents.db"
-CHROMA_DB_PATH = "embeddings/chroma_db"
-
 #Create folders 
-os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
-os.makedirs(os.path.dirname(CHROMA_DB_PATH), exist_ok=True)
+os.makedirs(DB_PATH.parent, exist_ok=True)
+os.makedirs(CHROMA_DB_PATH, exist_ok=True)
 
 #SqlLite Connection
 def init_sqlite():
@@ -81,6 +85,8 @@ def load_pdfs(pdf_dir):
                 "title": fname,
                 "source": source,
                 "document_type": "pdf",
+                "date_added": datetime.now().strftime("%Y-%m-%d"),
+                "tags": "human_rights,state_department"
             }))
     return docs
 
@@ -98,6 +104,8 @@ def load_csv(csv_path):
             "title": f"Row {index}",
             "source": source,
             "document_type": "csv",
+            "date_added": datetime.now().strftime("%Y-%m-%d"),
+            "tags": "human_rights,kaggle"
         }))
     return docs
 
@@ -126,7 +134,7 @@ if __name__ == "__main__":
     print(f"Loaded {len(pdf_docs)} PDFs")
 
     print("Loading CSV...")
-    csv_docs = load_csv(CSV_PATH)
+    csv_docs = load_csv(CSV_DIR / "human_rights.csv")
     print(f"Loaded {len(csv_docs)} CSV rows")
 
     all_docs = pdf_docs + csv_docs
@@ -137,9 +145,27 @@ if __name__ == "__main__":
     chunks = text_splitter.split_documents(all_docs)
 
     embedding_fn = OllamaEmbeddings(model="nomic-embed-text")
-    Chroma.from_documents(documents=chunks, embedding=embedding_fn, persist_directory=CHROMA_DB_PATH)
+    Chroma.from_documents(documents=chunks, embedding=embedding_fn, persist_directory=str(CHROMA_DB_PATH))
 
     logger.info(f"Loaded {len(pdf_docs)} PDFs")
     logger.info(f"Loaded {len(csv_docs)} CSV rows")
     
     logger.info(f"Ingest complete with {len(chunks)} chunks!")
+
+    print("Downloaded files:")
+    for item in DATA_DIR.iterdir():
+        # If moving the 'pdf' directory, move it to backend/data/pdf
+        if item.name == "pdf":
+            dest = DATA_DIR / "pdf"
+        elif item.name == "csv":
+            dest = DATA_DIR / "csv"
+        else:
+            dest = DATA_DIR / item.name
+        logger.info(f"Moving {item} to {dest}")
+        print(f"Moving {item} to {dest}")
+        if item.is_dir():
+            if dest.exists():
+                shutil.rmtree(dest)
+            shutil.move(str(item), str(dest))
+        else:
+            shutil.move(str(item), str(dest))

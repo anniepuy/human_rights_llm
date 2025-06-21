@@ -27,3 +27,4 @@ plotly
 
 # Utilities
 python-dotenv
+kagglehub
