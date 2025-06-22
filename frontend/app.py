@@ -36,6 +36,9 @@ except ImportError as e:
     logger.error(f"Failed to import backend module: {str(e)}")
     raise
 
+# Initialize the chat database tables
+chat_history.init_chat_table()
+
 st.set_page_config(page_title="Human Rights RAG Chatbot", layout="wide")
 st.title("🕊️ Human Rights RAG Chatbot")
 

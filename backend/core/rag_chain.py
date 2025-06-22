@@ -6,11 +6,15 @@ File: rag_chain.py
 Description: Retrieves top-k similar documents from ChromaDB and injects them into a prompt for the LLM to answer.
 """
 
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=UserWarning)
+
 import time
-from langchain_core.runnables import RunnableMap, RunnablePassthrough, RunnableLambda
+from langchain_core.runnables import RunnableMap
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.chat_models import ChatOllama
-from backend.core.retriever import retrieve_documents
+from .retriever import retrieve_documents
 from langchain_core.output_parsers import StrOutputParser
 
 ## Instantiate the LLM

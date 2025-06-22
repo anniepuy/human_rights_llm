@@ -163,14 +163,14 @@ if __name__ == "__main__":
     else:
         #Run the dos_scraper.py file
         try: 
-            subprocess.run(["python", "backend/ingest/dos_scraper.py"], check=True)
+            subprocess.run(["python", "ingest/dos_scraper.py"], check=True)
             logger.info("dos_scraper.py completed successfully!")
         except subprocess.CalledProcessError as e:
             logger.error(f"dos_scraper.py failed: {e}")
 
     #Run the ingest_documents.py file
     try:
-        subprocess.run(["python", "backend/ingest/ingest_documents.py"], check=True)
+        subprocess.run(["python", "ingest/ingest_documents.py"], check=True)
         logger.info("ingest_documents.py completed successfully!")
     except subprocess.CalledProcessError as e:
         logger.error(f"ingest_documents.py failed: {e}")
