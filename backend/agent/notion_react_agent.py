@@ -7,10 +7,8 @@ Description: Uses ReAct agent to generate or summarize human rights reports with
 """
 
 import warnings
-from langchain._api.deprecation import LangChainDeprecationWarning
-
-# Suppress deprecation warning
-warnings.filterwarnings("ignore", category=LangChainDeprecationWarning)
+# Suppress all warnings for now
+warnings.filterwarnings("ignore")
 import os
 import sys
 import logging
@@ -22,7 +20,7 @@ from langchain_ollama import ChatOllama
 from langchain_core.messages import HumanMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from notion_client import Client
-from langchain.tools import tool
+from langchain_core.tools import tool
 
 
 # Dynamically determine project root and add to sys.path

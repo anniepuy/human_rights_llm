@@ -1,9 +1,12 @@
 <mxfile host="65bd71144e">
     <diagram id="yJQCKHnWqSj0qzvx5GCp" name="Page-1">
-        <mxGraphModel dx="1642" dy="995" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1200" math="0" shadow="0">
+        <mxGraphModel dx="1893" dy="1113" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1200" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
+                <mxCell id="29" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+                    <mxGeometry x="192" y="9" width="1406" height="437" as="geometry"/>
+                </mxCell>
                 <mxCell id="4" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
                     <mxGeometry x="550" y="35" width="270" height="60" as="geometry"/>
                 </mxCell>
@@ -76,6 +79,36 @@
                         <Array as="points">
                             <mxPoint x="1095" y="190"/>
                         </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="27" value="As a DHS employee, I want to use natural lanaguage processing to query human rights issues and produce draft summary reports publishing them to a shared online location for team reaview." style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+                    <mxGeometry x="947" y="32" width="480" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;Issues&amp;nbsp;&lt;/span&gt;&lt;/h1&gt;&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;&lt;span style=&quot;background-color: transparent; font-size: 12px; font-weight: normal;&quot;&gt;1. Kaggle only downloads to root of folder but the run_ingest_pipeline was looking in the backend for the files to chunk&amp;amp; embed.&lt;/span&gt;&lt;/h1&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; font-size: 12px; font-weight: normal;&quot;&gt;Solution: Dowload to front end and then move the folders to backend&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; font-size: 12px; font-weight: normal;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; font-size: 12px; font-weight: normal;&quot;&gt;2.&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;color: rgb(0, 0, 0); font-family: &amp;quot;Helvetica Neue&amp;quot;; font-size: 11px; background-color: transparent;&quot;&gt;The Department of State (DOS) scraper was failing to find and download PDF reports for the 20 target countries from the Human Rights Reports website. The scraper was returning &quot;Found 0 target country links&quot; despite the website containing the expected country report pages.&amp;nbsp;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(0, 0, 0); font-family: &amp;quot;Helvetica Neue&amp;quot;; font-size: 11px; background-color: transparent;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(0, 0, 0); font-family: &amp;quot;Helvetica Neue&amp;quot;; font-size: 11px; background-color: transparent;&quot;&gt;Solution: Returned a Forbidden - had to add headers to mimig real user requests&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; font-family: &amp;quot;Helvetica Neue&amp;quot;; font-size: 11px;&quot;&gt;Narrow down loads from all to top 20&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; font-family: &amp;quot;Helvetica Neue&amp;quot;; font-size: 11px;&quot;&gt;URL pattern issues - flexible URL pattern matching and proper contry matching&amp;nbsp;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; font-family: &amp;quot;Helvetica Neue&amp;quot;; font-size: 11px;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; font-family: &amp;quot;Helvetica Neue&amp;quot;; font-size: 11px;&quot;&gt;3. Notion Post API Issues&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;font face=&quot;Helvetica Neue&quot;&gt;&lt;span style=&quot;font-size: 11px;&quot;&gt;Pytdantic compatability issues - Notion API respones didn&#39;t work with the Pydantic models.&amp;nbsp; Switched from @tool decoration to the Tool class.&amp;nbsp; Not sure this really helped because in the end the final solution was to separate the post to Notion in a subsequent function outside the ReAct Agent&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font face=&quot;Helvetica Neue&quot;&gt;&lt;span style=&quot;font-size: 11px;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font face=&quot;Helvetica Neue&quot;&gt;&lt;span style=&quot;font-size: 11px;&quot;&gt;4. ReACt Agent&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font face=&quot;Helvetica Neue&quot;&gt;&lt;span style=&quot;font-size: 11px;&quot;&gt;- Lots of iterations&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font face=&quot;Helvetica Neue&quot;&gt;&lt;span style=&quot;font-size: 11px;&quot;&gt;Aent refused to help - maybe LLM choice? Looked like issue was more persistant with front end.&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font face=&quot;Helvetica Neue&quot;&gt;&lt;span style=&quot;font-size: 11px;&quot;&gt;Extended the time to exire to 10 min but the script still failed. Maybe need to switch to FastAPI?&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font face=&quot;Helvetica Neue&quot;&gt;&lt;span style=&quot;font-size: 11px;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="41" y="548" width="810" height="601" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="18" y="292.5" width="139" height="83" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="&lt;div&gt;Notion API Call&lt;/div&gt;&lt;div&gt;Post&amp;nbsp;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="18" y="312" width="138" height="56" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="" style="endArrow=classic;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="10" target="31">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="735" y="504" as="sourcePoint"/>
+                        <mxPoint x="785" y="454" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="33" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="950" y="474.5" width="139" height="73.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" value="&lt;div&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;KaggleHub&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;Department of State&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="947" y="483.25" width="138" height="56" as="geometry"/>
+                </mxCell>
+                <mxCell id="36" value="" style="endArrow=classic;html=1;exitX=0.208;exitY=0.983;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="16">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="735" y="504" as="sourcePoint"/>
+                        <mxPoint x="1016" y="473" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
             </root>
