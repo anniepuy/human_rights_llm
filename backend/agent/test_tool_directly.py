@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 """
-Test the publish_to_notion_tool directly to verify it works
+Application: Human Rights LLM
+Author: Ann Hagan - ann.marie783@gmail.com
+Date: 06-21-2025
+File: test_tool_directly.py
+Description: Test the ability to publish to Notion page.
 """
+
 import os
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field

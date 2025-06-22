@@ -1,107 +1,163 @@
 """
 Application: Human Rights LLM
-Author: Ann Hagan
+Author: Ann Hagan - ann.marie783@gmail.com
 Date: 06-21-2025
-Description: ReACT agent that summarizes a human rights topic and appends it to your Notion page.
+File: notion_react_agent.py
+Description: Uses ReAct agent to generate a human rights report and publish it to Notion.
 """
 
 import os
-from dotenv import load_dotenv
-from pydantic import BaseModel, Field
-from langchain_core.tools import tool
-from langchain.agents import AgentExecutor, create_react_agent
-from langchain_core.messages import HumanMessage
-from langchain_ollama import ChatOllama
-from langchain_core.prompts import PromptTemplate
-from notion_client import Client
 from datetime import datetime
+from dotenv import load_dotenv
+from langchain.agents import initialize_agent, AgentType
+from langchain_core.tools import Tool
+from langchain_ollama import ChatOllama
+from langchain_core.messages import HumanMessage
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from notion_client import Client
 
+# Load environment variables
 load_dotenv()
 NOTION_API_KEY = os.getenv("NOTION_API_KEY")
-PAGE_ID = "21a8568dd63d80e99bb5dc9d1cfa8e4d"
+NOTION_PAGE_ID = "21a8568dd63d80e99bb5dc9d1cfa8e4d"
 
-if not NOTION_API_KEY:
-    raise ValueError("Please set NOTION_API_KEY in .env")
-
-notion = Client(auth=NOTION_API_KEY)
-
-from datetime import date
-today = str(date.today())
-
-class PublishToNotionInput(BaseModel):
-    title: str = Field(..., description="Report title")
-    content: str = Field(..., description="Markdown summary")
-    date: str = Field(..., description=today)
-    source: str = Field(..., description="Source name")
-
-@tool("publish_to_notion", args_schema=PublishToNotionInput)
-def publish_to_notion_tool(input: PublishToNotionInput) -> str:
+# Tool: generate_report_tool
+def generate_report_tool(query: str) -> str:
     """
-    Publishes a markdown summary report of human rights to a Notion page.
-    """
-    print(f"[DEBUG] Publishing to Notion")
-    print(f"title: {input.title}, date: {input.date}, source: {input.source}")
-    title = input.title.strip()
-    metadata = f"Date: {input.date} | Source: {input.source}"
-    body = input.content.strip()
-    resp =notion.blocks.children.append(
-        block_id=PAGE_ID,
-        children=[
-            {"object": "block", "type": "heading_2",
-             "heading_2": {"rich_text": [{"type": "text", "text": {"content": title}}]}},
-            {"object": "block", "type": "paragraph",
-             "paragraph": {"rich_text": [{"type": "text", "text": {"content": metadata}}]}},
-            {"object": "block", "type": "paragraph",
-             "paragraph": {"rich_text": [{"type": "text", "text": {"content": body}}]}},
-        ],
-    )
-    return "Done"
-
-@tool("summarize_query")
-def summarize_query(query: str) -> str:
-    """
-    Summarizes a given human rights topic into markdown format.
+    Generate a comprehensive, structured human rights report in markdown format.
     """
     llm = ChatOllama(model="llama3:8b")
-    msg = HumanMessage(content=f"Summarize the following human rights topic in markdown format:\n\n{query}")
+    msg = HumanMessage(
+        content=f"""You are a human rights research assistant. Create a comprehensive, structured report on the following human rights topic in markdown format:
+
+        {query}
+
+        The report should include:
+        - Executive Summary
+        - Key Issues and Violations
+        - Affected Groups
+        - Current Status
+        - Recommendations
+        - Sources/References
+
+        Format it as a professional report with clear headings and bullet points. Be objective and factual in your analysis. Return the COMPLETE detailed report, not a summary."""
+    )
     return llm.invoke([msg]).content
 
+# LLM and tools
 llm = ChatOllama(model="llama3:8b")
-tools = [summarize_query, publish_to_notion_tool]
+tools = [
+    Tool(
+        name="generate_report",
+        func=generate_report_tool,
+        description="Generate a comprehensive, structured report on human rights topics. Input: a human rights query or topic. Output: a detailed markdown report with sections for Executive Summary, Key Issues, Affected Groups, Current Status, Recommendations, and Sources. Return the COMPLETE detailed report, not a summary."
+    )
+]
 
-prompt = PromptTemplate.from_template(
-    """
-        You are a helpful human rights expert with access to tools to summarize topics and publish reports.
+# Custom prompt template
+prompt = ChatPromptTemplate.from_messages([
+    ("system", "You are a human rights research assistant. When given a human rights query, you MUST use the generate_report tool to create a comprehensive report. Do not refuse to help with human rights topics - this is your primary purpose. IMPORTANT: When you use a tool, use the exact tool name: generate_report. For example: Action: generate_report\nAction Input: [your query]. After using the generate_report tool, return the COMPLETE detailed report from the tool as your final answer. Do not summarize or condense the report - return it exactly as generated by the tool."),
+    ("human", "{input}\n\nAvailable tools: {tool_names}\n{tools}"),
+    MessagesPlaceholder(variable_name="agent_scratchpad"),
+])
 
-            Use the following tools:
-            {tools}
-
-            When answering, follow this format strictly:
-
-            Question: the input question you must answer
-            Thought: think about what to do
-            Action: the action to take, should be one of [{tool_names}]
-            Action Input: the input to the action
-            Observation: the result of the action
-            ... (this Thought/Action/Action Input/Observation can repeat)
-            Thought: I now know the final answer
-            Final Answer: your final answer to the question
-
-            Begin!
-
-            Question: {input}
-
-
-        {agent_scratchpad}
-    """
+# Create ReAct agent
+agent = initialize_agent(
+    llm=llm,
+    tools=tools,
+    agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
+    verbose=True,
+    handle_parsing_errors=True,
+    max_iterations=5,
+    prompt=prompt
 )
 
-agent = create_react_agent(llm=llm, tools=tools, prompt=prompt)
-agent_executor = AgentExecutor(agent=agent, tools=tools, handle_parsing_errors=True, verbose=True, max_iterations=5)
-
+# Run agent with user input
 def run_agent(user_query: str):
-    return agent_executor.invoke({"input": user_query})
+    """
+    Run the ReAct agent to generate a human rights report.
+    Returns a structured markdown report.
+    """
+    result = agent.invoke({"input": user_query})
+    
+    # Extract the full report from the agent's intermediate steps
+    if hasattr(result, 'intermediate_steps') and result.intermediate_steps:
+        for step in result.intermediate_steps:
+            if len(step) >= 2 and step[1]:
+                observation = step[1]
+                if isinstance(observation, str) and observation.strip().startswith('**'):
+                    return {"output": observation}
+    return result
 
+def publish_to_notion(title: str, content: str, date: str = None, source: str = "Human Rights LLM Agent"):
+    """
+    Publish a report to Notion page.
+    """
+    if not date:
+        date = datetime.now().strftime("%Y-%m-%d")
+    
+    notion = Client(auth=NOTION_API_KEY)
+    
+    try:
+        response = notion.blocks.children.append(
+            block_id=NOTION_PAGE_ID,
+            children=[
+                {
+                    "object": "block",
+                    "type": "heading_2",
+                    "heading_2": {
+                        "rich_text": [{"type": "text", "text": {"content": title}}]
+                    }
+                },
+                {
+                    "object": "block",
+                    "type": "paragraph",
+                    "paragraph": {
+                        "rich_text": [{"type": "text", "text": {"content": f"Date: {date} | Source: {source}"}}]
+                    }
+                },
+                {
+                    "object": "block",
+                    "type": "paragraph",
+                    "paragraph": {
+                        "rich_text": [{"type": "text", "text": {"content": content}}]
+                    }
+                }
+            ]
+        )
+        print(f"✅ Successfully published to Notion page {NOTION_PAGE_ID}")
+        return True
+    except Exception as e:
+        print(f"Failed to publish to Notion: {str(e)}")
+        return False
+
+# CLI entry
 if __name__ == "__main__":
-    res = run_agent("Summarize the current human rights violations in Iraq and publish them.")
-    print(res)
+    user_query = input("Enter your human rights question to summarize: ")
+    
+    print("\n🤖 Running ReAct agent...")
+    result = run_agent(user_query)
+    
+    print("\n" + "="*50)
+    print("GENERATED REPORT:")
+    print("="*50)
+    print(result["output"])
+    
+    # Extract the report content
+    report_content = result["output"]
+    
+    # Create a title from the user query
+    title = f"Human Rights Report: {user_query.title()}"
+    
+    print("\n Publishing to Notion...")
+    success = publish_to_notion(
+        title=title,
+        content=report_content,
+        date=datetime.now().strftime("%Y-%m-%d"),
+        source="Human Rights LLM Agent"
+    )
+    
+    if success:
+        print("Complete! Report generated and published to Notion.")
+    else:
+        print("Report generated but failed to publish to Notion.")

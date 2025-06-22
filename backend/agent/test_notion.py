@@ -13,7 +13,7 @@ print(f"NOTION_API_KEY: {'SET' if notion_api_key else 'NOT SET'}")
 print(f"NOTION_DATABASE_ID: {'SET' if notion_db_id else 'NOT SET'}")
 
 if not notion_api_key or not notion_db_id:
-    print("\n❌ Environment variables are not set!")
+    print("\nEnvironment variables are not set!")
     print("Please set the following environment variables:")
     print("export NOTION_API_KEY='your_notion_api_key_here'")
     print("export NOTION_DATABASE_ID='your_notion_database_id_here'")
@@ -26,7 +26,7 @@ try:
     
     # Try to get database info
     database = notion.databases.retrieve(database_id=notion_db_id)
-    print(f"✅ Successfully connected to Notion database: {database['title'][0]['plain_text']}")
+    print(f"Successfully connected to Notion database: {database['title'][0]['plain_text']}")
     
     # Test creating a simple page
     print("\nTesting page creation...")
@@ -44,14 +44,14 @@ try:
             }
         }
     )
-    print(f"✅ Successfully created test page: {response['id']}")
+    print(f"Successfully created test page: {response['id']}")
     
     # Clean up - delete the test page
     notion.pages.update(page_id=response['id'], archived=True)
-    print("✅ Test page deleted")
+    print(" Test page deleted")
     
 except Exception as e:
-    print(f"❌ Error connecting to Notion: {str(e)}")
+    print(f"Error connecting to Notion: {str(e)}")
     print("\nPlease check:")
     print("1. Your NOTION_API_KEY is correct")
     print("2. Your NOTION_DATABASE_ID is correct")
