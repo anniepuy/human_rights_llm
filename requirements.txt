@@ -25,6 +25,10 @@ loguru  # better logging
 streamlit
 plotly
 
+# API Backend
+flask
+flask-cors
+
 # Utilities
 python-dotenv
 kagglehub

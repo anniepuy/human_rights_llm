@@ -10,11 +10,11 @@ import time
 from langchain_core.runnables import RunnableMap, RunnablePassthrough, RunnableLambda
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.chat_models import ChatOllama
-from backend.tools.retriever import retrieve_documents
+from backend.core.retriever import retrieve_documents
 from langchain_core.output_parsers import StrOutputParser
 
 ## Instantiate the LLM
-llm = ChatOllama(model="llama3:8b")
+llm = ChatOllama(model="mistral:latest")
 
 #Prompt template with citation template
 RAG_PROMPT = ChatPromptTemplate.from_template("""
