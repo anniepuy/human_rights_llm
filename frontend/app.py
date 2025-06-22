@@ -17,6 +17,7 @@ from backend.tools.rag_chain import retrieve_documents
 #from backend.memory.chat_memory import chat_history
 from backend.memory import sql_chat_memory as chat_history
 from langchain_core.messages import HumanMessage, AIMessage
+import requests
 
 #ensure the database exists
 chat_history.init_chat_table()
@@ -41,11 +42,16 @@ user_input = st.text_input("Ask a question about human rights:", key="user_input
 
 if user_input:
     chat_history.save_message("user", user_input)
-    retrieved_docs = retrieve_documents(user_input)
-
-    response = "\n\n".join(
-        f"**{doc.metadata.get('title', 'Unknown')}**\n\n{doc.page_content[:500]}..." for doc in retrieved_docs
-    )
+    try:
+        response = requests.post(
+            "http://localhost:5000/api/agent", 
+            json={"query": user_input},
+            timeout=60
+        )
+        response_data = response.json()
+        response = response_data.get("result", "Error: No response from agent")
+    except Exception as e:
+        response = f"Error: {str(e)}"
     chat_history.save_message("ai", response)
 
 #display convo
