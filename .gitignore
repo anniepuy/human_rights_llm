@@ -53,3 +53,8 @@ coverage/
 
 # Kaggle API key
 kaggle/kaggle.json
+
+# Environment and sensitive files
+.env
+set_notion_env.py
+update_env.py

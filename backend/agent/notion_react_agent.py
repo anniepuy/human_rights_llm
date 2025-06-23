@@ -45,7 +45,7 @@ logger = logging.getLogger(__name__)
 # Load environment variables
 load_dotenv()
 NOTION_API_KEY = os.getenv("NOTION_API_KEY")
-NOTION_PAGE_ID = "21a8568dd63d80e99bb5dc9d1cfa8e4d"
+NOTION_PAGE_ID = "<YOURNOTION_PAGE_ID>"
 
 # Tool: generate_report_tool
 def generate_report_tool(query: str) -> str:

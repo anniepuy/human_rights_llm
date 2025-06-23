@@ -4,7 +4,7 @@ from notion_client import Client
 
 load_dotenv()
 NOTION_API_KEY = os.getenv("NOTION_API_KEY")
-NOTION_PAGE_ID = "21a8568dd63d80e99bb5dc9d1cfa8e4d"  # Replace with your actual Notion page ID
+NOTION_PAGE_ID = "<YOUR NOTION PAGE ID>"  # Replace with your actual Notion page ID
 
 notion = Client(auth=NOTION_API_KEY)
 

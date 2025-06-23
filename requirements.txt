@@ -1,14 +1,17 @@
 # Core LLM + RAG
-langchain>=0.2.0
-langchain-community>=0.2.0
-langchain-core>=0.2.0
+langchain==0.3.26
+langchain-community==0.3.26
+langchain-core==0.3.66
+langchain-ollama==0.3.3
+langchain-text-splitters==0.3.8
 langchainhub
+langsmith==0.4.1
 chromadb
 pydantic>=2.0
 tiktoken
 
 # LLM/Embeddings
-ollama
+ollama==0.5.1
 nomic
 
 # File Parsing
@@ -17,7 +20,7 @@ pandas   # for CSVs
 
 # Local Storage + Logging
 sqlite-utils
-sqlalchemy
+sqlalchemy==2.0.41
 tinydb  # optional lightweight storage
 loguru  # better logging
 
@@ -26,9 +29,24 @@ streamlit
 plotly
 
 # API Backend
-flask
-flask-cors
+flask==2.3.3
+flask-cors==4.0.0
 
 # Utilities
-python-dotenv
-kagglehub
+python-dotenv==1.1.0
+kagglehub==0.3.12
+notion-client
+httpx==0.28.1
+httpx-sse==0.4.0
+dataclasses-json==0.6.7
+marshmallow==3.26.1
+tenacity==9.1.2
+jsonpatch==1.33
+jsonpointer==2.1
+orjson==3.10.18
+zstandard==0.23.0
+requests-toolbelt==1.0.0
+anyio==4.9.0
+httpcore==1.0.9
+h11==0.16.0
+sniffio==1.3.1
