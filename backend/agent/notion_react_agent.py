@@ -45,9 +45,10 @@ logger = logging.getLogger(__name__)
 # Load environment variables
 load_dotenv()
 NOTION_API_KEY = os.getenv("NOTION_API_KEY")
-NOTION_PAGE_ID = "<YOURNOTION_PAGE_ID>"
+NOTION_PAGE_ID = os.getenv("NOTION_PAGE_ID")
 
 # Tool: generate_report_tool
+@tool("generate_report_tool")
 def generate_report_tool(query: str) -> str:
     """
     Generate a comprehensive, structured human rights report in markdown format.
@@ -135,11 +136,12 @@ def summarize_with_context(query_and_context: dict) -> str:
 # LLM and tools
 llm = ChatOllama(model="mistral:latest")
 tools = [
-    Tool(
-        name="generate_report",
-        func=generate_report_tool,
-        description="Generate a comprehensive, structured report on human rights topics using general knowledge if RAG data is unavailable. Input: a human rights query or topic. Output: a detailed markdown report with sections for Executive Summary, Key Issues, Affected Groups, Current Status, Recommendations, and Sources."
-    ),
+    #Tool(
+     #   name="generate_report",
+     #   func=generate_report_tool,
+     #   description="Generate a comprehensive, structured report on human rights topics using general knowledge if RAG data is unavailable. Input: a human rights query or topic. Output: a detailed markdown report with sections for Executive Summary, Key Issues, Affected Groups, Current Status, Recommendations, and Sources."
+    #),
+    generate_report_tool,
     summarize_llm_only,
     search_rag_data,
     summarize_with_context

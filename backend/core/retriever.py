@@ -27,12 +27,13 @@ def retrieve_documents(query: str, k: int = 5):
     Returns a list of Documents with metadata
     """
     results = db.similarity_search(query, k=k)
+   
     return results
 
 #test block
 if __name__ == "__main__":
     query = "What is the human rights situation in Syria?"
-    results = retrieve_documents(query, k=3)
+    results = retrieve_documents(query, k=3, csore_threshold=0.5)
     for i, doc in enumerate(results, 1):
         print(f"\nResult {i}:")
         print(f"Source: {doc.metadata.get('source', 'Unknown')}")
@@ -40,3 +41,4 @@ if __name__ == "__main__":
         print(f"Title: {doc.metadata.get('title', 'Unknown')}")
         print(f"Content preview: {doc.page_content[:200]}...")
         print("-" * 40)
+      

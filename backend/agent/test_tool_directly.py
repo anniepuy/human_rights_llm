@@ -18,7 +18,7 @@ load_dotenv()
 
 # Notion API set up
 NOTION_API_KEY = os.getenv("NOTION_API_KEY")
-NOTION_PAGE_ID = "<YOUR NOTION PAGE ID>"
+NOTION_PAGE_ID = os.getenv("NOTION_PAGE_ID")
 
 notion = Client(auth=NOTION_API_KEY)
 
